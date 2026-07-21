@@ -39,9 +39,11 @@ return;
 showResult(data[0]);
 
 }
-catch{
+catch(error){
 
-loading.innerHTML="Unable to fetch location";
+console.log(error);
+
+loading.innerHTML = "Error: " + error.message;
 
 }
 
