@@ -1,3 +1,9 @@
+/* ==========================================
+LOCATION APP
+Version 1.0
+Part A
+========================================== */
+
 const resultCard =
 document.getElementById("resultCard");
 
@@ -10,11 +16,25 @@ document.getElementById("searchBtn");
 const currentLocationBtn =
 document.getElementById("currentLocationBtn");
 
-/* ==========================
-SEARCH LOCATION
-========================== */
+const searchInput =
+document.getElementById("searchInput");
 
-async function searchLocation(query){
+/* ==========================================
+SEARCH LOCATION
+========================================== */
+
+async function searchLocation(){
+
+const query =
+searchInput.value.trim();
+
+if(query===""){
+
+alert("Please enter a location.");
+
+return;
+
+}
 
 loading.innerHTML="Searching...";
 
@@ -22,58 +42,40 @@ resultCard.style.display="none";
 
 try{
 
-const response =
-await fetch(
+const url =
 
 "https://geocode.maps.co/search?q="+
-encodeURIComponent(query)+
-"&api_key="
 
-);
+encodeURIComponent(query);
+
+const response =
+await fetch(url);
+
+if(!response.ok){
+
+throw new Error("Server Error");
+
+}
 
 const data =
 await response.json();
 
-if(!data || data.length===0){
+if(!Array.isArray(data) || data.length===0){
 
-loading.innerHTML="Location Not Found";
+loading.innerHTML="Location not found.";
 
 return;
 
 }
 
-const place = data[0];
+const place =
+data[0];
 
-const reverse =
-await fetch(
+await getPlaceDetails(
 
-"https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+
-place.lat+
-"&lon="+
-place.lon
-
-);
-
-const reverseData =
-await reverse.json();
-
-showResult(
-
-{
-
-display_name:
-reverseData.display_name,
-
-lat:
 place.lat,
 
-lon:
-place.lon,
-
-address:
-reverseData.address
-
-}
+place.lon
 
 );
 
@@ -83,15 +85,60 @@ catch(error){
 
 console.log(error);
 
-loading.innerHTML="Unable to fetch location";
+loading.innerHTML=
+
+"Unable to search location.";
 
 }
 
 }
 
-/* ==========================
-SHOW RESULT CARD
-========================== */
+/* ==========================================
+GET DETAILS FROM LATITUDE/LONGITUDE
+========================================== */
+
+async function getPlaceDetails(
+
+lat,
+
+lon
+
+){
+
+const reverseURL =
+
+"https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+
+
+lat+
+
+"&lon="+
+
+lon;
+
+const reverseResponse =
+
+await fetch(reverseURL);
+
+if(!reverseResponse.ok){
+
+throw new Error("Reverse lookup failed");
+
+}
+
+const reverseData =
+
+await reverseResponse.json();
+
+showResult(
+
+reverseData
+
+);
+
+}
+/* ==========================================
+SHOW RESULT
+========================================== */
 
 function showResult(place){
 
@@ -101,6 +148,45 @@ resultCard.style.display="block";
 
 const address =
 place.address || {};
+
+const area =
+address.suburb ||
+address.neighbourhood ||
+address.village ||
+address.hamlet ||
+address.quarter ||
+"N/A";
+
+const district =
+address.county ||
+address.city_district ||
+address.district ||
+"N/A";
+
+const state =
+address.state || "N/A";
+
+const country =
+address.country || "N/A";
+
+const pincode =
+address.postcode || "N/A";
+
+const latitude =
+place.lat || "N/A";
+
+const longitude =
+place.lon || "N/A";
+
+const mapLink =
+
+"https://www.google.com/maps?q="+
+
+latitude+
+
+","+
+
+longitude;
 
 resultCard.innerHTML=
 
@@ -116,15 +202,7 @@ resultCard.innerHTML=
 
 <b>Area :</b>
 
-${address.suburb ||
-
-address.neighbourhood ||
-
-address.village ||
-
-address.hamlet ||
-
-"N/A"}
+${area}
 
 </div>
 
@@ -132,11 +210,7 @@ address.hamlet ||
 
 <b>District :</b>
 
-${address.county ||
-
-address.city_district ||
-
-"N/A"}
+${district}
 
 </div>
 
@@ -144,9 +218,7 @@ address.city_district ||
 
 <b>State :</b>
 
-${address.state ||
-
-"N/A"}
+${state}
 
 </div>
 
@@ -154,9 +226,7 @@ ${address.state ||
 
 <b>Country :</b>
 
-${address.country ||
-
-"N/A"}
+${country}
 
 </div>
 
@@ -164,9 +234,7 @@ ${address.country ||
 
 <b>PIN Code :</b>
 
-${address.postcode ||
-
-"N/A"}
+${pincode}
 
 </div>
 
@@ -174,7 +242,7 @@ ${address.postcode ||
 
 <b>Latitude :</b>
 
-${place.lat}
+${latitude}
 
 </div>
 
@@ -182,15 +250,28 @@ ${place.lat}
 
 <b>Longitude :</b>
 
-${place.lon}
+${longitude}
+
+</div>
+
+<div class="resultItem">
+
+<a href="${mapLink}"
+
+target="_blank">
+
+🗺️ Open in Google Maps
+
+</a>
 
 </div>
 
 `;
+
 }
-/* ==========================
+/* ==========================================
 SEARCH BUTTON
-========================== */
+========================================== */
 
 searchBtn.addEventListener(
 
@@ -198,27 +279,15 @@ searchBtn.addEventListener(
 
 function(){
 
-const query =
-
-document.getElementById("searchInput").value.trim();
-
-if(query===""){
-
-alert("Please enter a location.");
-
-return;
+searchLocation();
 
 }
 
-searchLocation(query);
-
-}
+/* ==========================================
+CURRENT LOCATION
+========================================== */
 
 );
-
-/* ==========================
-CURRENT LOCATION
-========================== */
 
 currentLocationBtn.addEventListener(
 
@@ -228,13 +297,15 @@ function(){
 
 if(!navigator.geolocation){
 
-alert("Geolocation not supported");
+alert("Geolocation is not supported.");
 
 return;
 
 }
 
 loading.innerHTML="Getting Current Location...";
+
+resultCard.style.display="none";
 
 navigator.geolocation.getCurrentPosition(
 
@@ -250,25 +321,13 @@ position.coords.longitude;
 
 try{
 
-const response =
+await getPlaceDetails(
 
-await fetch(
-
-"https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="+
-
-lat+
-
-"&lon="+
+lat,
 
 lon
 
 );
-
-const data =
-
-await response.json();
-
-showResult(data);
 
 }
 
@@ -276,7 +335,9 @@ catch(error){
 
 console.log(error);
 
-loading.innerHTML="Unable to fetch current location";
+loading.innerHTML=
+
+"Unable to fetch current location.";
 
 }
 
@@ -284,7 +345,19 @@ loading.innerHTML="Unable to fetch current location";
 
 function(){
 
-loading.innerHTML="Permission Denied";
+loading.innerHTML=
+
+"Location permission denied.";
+
+},
+
+{
+
+enableHighAccuracy:true,
+
+timeout:15000,
+
+maximumAge:0
 
 }
 
@@ -292,17 +365,15 @@ loading.innerHTML="Permission Denied";
 
 }
 
-/* ==========================
-FUTURE MODULES
-==============
+/* ==========================================
+FUTURE MODULES (Version 1.5)
 
-Version 1.5
-
-• Continent
-• Railway Station
-• Airport
-• Police Station
-• Tourist Places
-• Google Maps Button
-
-========================== */
+✓ Continent
+✓ Nearest Railway Station
+✓ Nearest Airport
+✓ Police Station
+✓ Tourist Places
+✓ Distance
+✓ Weather
+========================================== */
+);
