@@ -136,3 +136,81 @@ async function getLocationDetails(lat, lon) {
     }
 
 }
+/* ==========================================
+   SHOW LOCATION DETAILS
+========================================== */
+
+function showLocation(data) {
+
+    loading.innerHTML = "";
+
+    const address = data.address || {};
+
+    const area =
+        address.suburb ||
+        address.neighbourhood ||
+        address.village ||
+        address.hamlet ||
+        address.quarter ||
+        "N/A";
+
+    const district =
+        address.county ||
+        address.city_district ||
+        address.district ||
+        "N/A";
+
+    const state =
+        address.state || "N/A";
+
+    const country =
+        address.country || "N/A";
+
+    const postcode =
+        address.postcode || "N/A";
+
+    const latitude =
+        data.lat || "N/A";
+
+    const longitude =
+        data.lon || "N/A";
+
+    const mapLink =
+        "https://www.google.com/maps?q=" +
+        latitude +
+        "," +
+        longitude;
+
+    resultCard.innerHTML = `
+
+<h2>📍 ${data.display_name}</h2>
+
+<hr>
+
+<p><b>🏡 Area :</b> ${area}</p>
+
+<p><b>🏛 District :</b> ${district}</p>
+
+<p><b>🌆 State :</b> ${state}</p>
+
+<p><b>🌍 Country :</b> ${country}</p>
+
+<p><b>📮 PIN Code :</b> ${postcode}</p>
+
+<p><b>📌 Latitude :</b> ${latitude}</p>
+
+<p><b>📌 Longitude :</b> ${longitude}</p>
+
+<p>
+
+<a href="${mapLink}" target="_blank">
+
+🗺 Open in Google Maps
+
+</a>
+
+</p>
+
+`;
+
+}
