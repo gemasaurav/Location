@@ -141,7 +141,8 @@ async function getLocationDetails(lat, lon) {
 ========================================== */
 
 function showLocation(data) {
-
+alert("showLocation is working");
+console.log(data);
     loading.innerHTML = "";
 
     const address = data.address || {};
