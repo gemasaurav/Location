@@ -51,3 +51,88 @@ async function searchLocation(place) {
     resultCard.innerHTML = "";
 
 }
+/* ==========================================
+   ONLINE SEARCH
+========================================== */
+
+async function searchLocation(place) {
+
+    loading.innerHTML = "🔍 Searching...";
+
+    resultCard.innerHTML = "";
+
+    try {
+
+        const response = await fetch(
+
+            "https://nominatim.openstreetmap.org/search?format=jsonv2&q=" +
+
+            encodeURIComponent(place)
+
+        );
+
+        const data = await response.json();
+
+        if (data.length === 0) {
+
+            loading.innerHTML = "❌ Location not found.";
+
+            return;
+
+        }
+
+        const lat = data[0].lat;
+
+        const lon = data[0].lon;
+
+        getLocationDetails(lat, lon);
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+        loading.innerHTML = "❌ Error searching location.";
+
+    }
+
+}
+
+/* ==========================================
+   GET COMPLETE LOCATION DETAILS
+========================================== */
+
+async function getLocationDetails(lat, lon) {
+
+    loading.innerHTML = "📍 Loading Details...";
+
+    try {
+
+        const response = await fetch(
+
+            "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" +
+
+            lat +
+
+            "&lon=" +
+
+            lon
+
+        );
+
+        const data = await response.json();
+
+        showLocation(data);
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+        loading.innerHTML = "❌ Unable to fetch details.";
+
+    }
+
+}
