@@ -277,8 +277,9 @@ SEARCH BUTTON
    SEARCH BUTTON
 =========================== */
 
-searchBtn.addEventListener("click", async function () {
-
+searchBtn.onclick = function () {
+    searchLocation();
+};
     const place = document.getElementById("searchInput").value.trim();
 
     if (place === "") {
