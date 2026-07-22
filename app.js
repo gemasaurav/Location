@@ -377,8 +377,6 @@ searchBtn.addEventListener("click", async function () {
 CURRENT LOCATION
 ========================================== */
 
-);
-
 currentLocationBtn.addEventListener(
 
 "click",
@@ -466,4 +464,3 @@ FUTURE MODULES (Version 1.5)
 ✓ Distance
 ✓ Weather
 ========================================== */
-);
