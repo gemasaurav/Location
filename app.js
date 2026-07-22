@@ -91,11 +91,13 @@ async function searchLocation(place) {
 
     catch (error) {
 
-        console.log(error);
+    console.log(error);
 
-        loading.innerHTML = "❌ Error searching location.";
+    alert(error);
 
-    }
+    loading.innerHTML = error;
+
+}
 
 }
 
