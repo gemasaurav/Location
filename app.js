@@ -44,13 +44,6 @@ searchBtn.addEventListener("click", function () {
    SEARCH LOCATION FUNCTION
 ========================================== */
 
-async function searchLocation(place) {
-
-    loading.innerHTML = "🔍 Searching...";
-
-    resultCard.innerHTML = "";
-
-}
 /* ==========================================
    ONLINE SEARCH
 ========================================== */
