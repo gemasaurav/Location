@@ -41,9 +41,45 @@ searchBtn.addEventListener("click", function () {
 });
 
 /* ==========================================
-   SEARCH LOCATION FUNCTION
+   SEARCH LOCATION (Geoapify)
 ========================================== */
 
+async function searchLocation(place){
+
+loading.innerHTML="🔍 Searching...";
+
+resultCard.innerHTML="";
+
+try{
+
+const url=
+`https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(place)}&format=json&apiKey=d8cceaa337004016a2773a118be711d6`;
+
+const response=await fetch(url);
+
+const data=await response.json();
+
+if(!data.results || data.results.length==0){
+
+loading.innerHTML="❌ Location not found.";
+
+return;
+
+}
+
+showLocation(data.results[0]);
+
+}
+
+catch(error){
+
+console.log(error);
+
+loading.innerHTML="❌ "+error.message;
+
+}
+
+}
 /* ==========================================
    ONLINE SEARCH
 ========================================== */
