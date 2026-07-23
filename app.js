@@ -116,15 +116,25 @@ async function getLocationDetails(lat, lon) {
 
         const response = await fetch(
 
-            "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" +
+"https://nominatim.openstreetmap.org/reverse?format=json&lat="+
 
-            lat +
+lat+
 
-            "&lon=" +
+"&lon="+
 
-            lon
+lon,
 
-        );
+{
+
+headers:{
+
+"Accept":"application/json"
+
+}
+
+}
+
+);
 
         const data = await response.json();
 
