@@ -188,7 +188,7 @@ headers:{
 
 }
 /* ==========================================
-   SHOW LOCATION DETAILS
+   SHOW LOCATION
 ========================================== */
 
 function showLocation(data){
@@ -197,13 +197,33 @@ loading.innerHTML="";
 
 resultCard.innerHTML=`
 
-<h1 style="color:red;">
-IT WORKS
-</h1>
+<h2>📍 ${data.formatted}</h2>
+
+<hr>
+
+<p><b>🏡 Area :</b> ${data.suburb || data.village || data.hamlet || "N/A"}</p>
+
+<p><b>🏛 District :</b> ${data.county || "N/A"}</p>
+
+<p><b>🌆 State :</b> ${data.state || "N/A"}</p>
+
+<p><b>🌍 Country :</b> ${data.country || "N/A"}</p>
+
+<p><b>📮 PIN Code :</b> ${data.postcode || "N/A"}</p>
+
+<p><b>🌎 Continent :</b> ${data.continent || "N/A"}</p>
+
+<p><b>📌 Latitude :</b> ${data.lat}</p>
+
+<p><b>📌 Longitude :</b> ${data.lon}</p>
 
 <p>
 
-${data.display_name}
+<a href="https://www.google.com/maps?q=${data.lat},${data.lon}" target="_blank">
+
+🗺 Open in Google Maps
+
+</a>
 
 </p>
 
