@@ -58,11 +58,21 @@ async function searchLocation(place) {
 
         const response = await fetch(
 
-            "https://nominatim.openstreetmap.org/search?format=jsonv2&q=" +
+"https://nominatim.openstreetmap.org/search?format=json&q=" +
 
-            encodeURIComponent(place)
+encodeURIComponent(place),
 
-        );
+{
+
+headers:{
+
+"Accept":"application/json"
+
+}
+
+}
+
+);
 
         const data = await response.json();
 
