@@ -73,9 +73,14 @@ showLocation(data.results[0]);
 
 catch(error){
 
-console.log(error);
+loading.innerHTML = `
+<h3 style="color:red;">ERROR</h3>
+<p>${error.name}</p>
+<p>${error.message}</p>
+<p>${navigator.userAgent}</p>
+`;
 
-loading.innerHTML="❌ "+error.message;
+alert(error.name + "\n" + error.message);
 
 }
 
